@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, Pressable} from 'react-native';
-import Strings from './constant';
+import Strings from '../Constant';
 
 const Login = ({navigation}) => {
   const onPress = () => {
