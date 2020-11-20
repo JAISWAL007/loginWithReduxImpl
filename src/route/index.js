@@ -5,14 +5,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from '../screen/Login';
 import Dashboard from '../screen/Dashboard';
-import SignUp from '../screen/SignUp';
 
 const PreLogin = () => {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="SignUp" component={SignUp} />
     </Stack.Navigator>
   );
 };

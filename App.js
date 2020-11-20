@@ -1,28 +1,18 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import NetInfo from '@react-native-community/netinfo';
+import {Provider} from 'react-redux';
 import Toast from 'react-native-toast-message';
-import NetworkContext from './src/NetworkContext';
+import store from './src/redux/store';
 import Navigation from './src/route';
 
 const App = () => {
-  const [networkStatus, setNetworkStatus] = React.useState();
-
-  React.useEffect(() => {
-    NetInfo.addEventListener((state) => {
-      setNetworkStatus(state.isConnected);
-      console.log('Connection type', state.type);
-      console.log('Is connected?', state.isConnected);
-    });
-  }, []);
-
   return (
     <>
-      <NetworkContext.Provider value={networkStatus}>
+      <Provider store={store}>
         <Navigation />
-      </NetworkContext.Provider>
-      <Toast ref={(ref) => Toast.setRef(ref)} />
+        <Toast ref={(ref) => Toast.setRef(ref)} />
+      </Provider>
     </>
   );
 };

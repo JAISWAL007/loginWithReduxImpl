@@ -2,53 +2,25 @@ import React, {useState, useRef} from 'react';
 import {Text, Pressable, TextInput, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
-import {useIsFocused, StackActions} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {StackActions} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 import Strings from '../Constant';
 
 const Login = ({navigation}) => {
-  const isFocused = useIsFocused();
+  const storeUserName = useSelector((state) => state?.login?.username);
+  const storePassword = useSelector((state) => state?.login?.password);
+
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const [userDetails, setUserDetails] = useState('');
   const ref_Password = useRef();
-
-  const getData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('loginCredentials');
-      jsonValue != null ? JSON.parse(jsonValue) : null;
-      console.log('JsonValue', jsonValue);
-      if (jsonValue) {
-        setUserDetails(JSON.parse(jsonValue));
-        console.log('jsonValue', jsonValue);
-      }
-    } catch (e) {
-      // error reading value
-      console.log('error1');
-    }
-  };
-
-  React.useEffect(() => {
-    getData();
-  }, [isFocused]);
 
   const onPress = () => {
     if (userName && password) {
-      if (
-        userDetails.some(
-          (val) => val.userName === userName || val.mobileNumber === userName,
-        )
-      ) {
-        if (userDetails.some((val) => val.password === password)) {
-          const user = userDetails.filter((val) => {
-            if (val.userName === userName || val.mobileNumber === userName) {
-              return val;
-            }
-          });
+      if (userName === storeUserName) {
+        if (password === storePassword) {
           navigation.dispatch(
             StackActions.replace('PostLogin', {
               screen: 'Dashboard',
-              params: {data: user[0]},
             }),
           );
         } else {
@@ -65,9 +37,7 @@ const Login = ({navigation}) => {
     }
   };
 
-  const onSignUp = () => {
-    navigation.navigate('SignUp');
-  };
+  const onSignUp = () => {};
 
   const validateUserName = (name) => {
     if (name) {
@@ -99,6 +69,7 @@ const Login = ({navigation}) => {
         onChangeText={validateUserName}
         placeholder={Strings.ENTER_USER_NAME}
         style={styles.inputStyle}
+        keyboardType="email-address"
         returnKeyType="next"
         onSubmitEditing={() => {
           ref_Password.current.focus();
@@ -131,7 +102,9 @@ const Login = ({navigation}) => {
       </Pressable>
       <Text style={styles.forgotPasswordStyle}>
         {Strings.DONT_HAVE_ACCOUNT}{' '}
-        <Text style={{color: '#A91004'}} onPress={onSignUp}>
+        <Text
+          style={{color: '#A91004'}}
+          onPress={() => alert(Strings.COMINGS_SOON)}>
           {Strings.SIGN_UP}
         </Text>
       </Text>
